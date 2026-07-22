@@ -1,0 +1,223 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mercedes Sprinter — Комфортные Поездки</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Leaflet.js CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'bookings/css/style.css' %}">
+</head>
+<body>
+    <!-- CSRF Token for JavaScript -->
+    {% csrf_token %}
+
+    <!-- Top Navigation Bar -->
+    <header class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <i class="fa-solid fa-van-shuttle logo-icon"></i>
+                <span class="logo-text">Sprinter<span class="highlight">Express</span></span>
+            </div>
+            <div class="contact-nav">
+                <a href="tel:87026448344" class="phone-link">
+                    <i class="fa-solid fa-phone phone-icon"></i>
+                    <span>87026448344</span>
+                </a>
+                <a href="https://wa.me/87026448344" target="_blank" class="nav-btn-whatsapp">
+                    <i class="fa-brands fa-whatsapp"></i> WhatsApp
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="main-content">
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <div class="hero-grid">
+                <div class="hero-info">
+                    <span class="badge">Премиум Класс</span>
+                    <h1 class="hero-title">Mercedes Sprinter</h1>
+                    <p class="hero-description">
+                        Комфортабельные пассажирские перевозки по любым направлениям. Просторный салон, регулируемые сиденья, мощный кондиционер и безопасность в каждой поездке.
+                    </p>
+                    
+                    <!-- Vehicle Features List -->
+                    <div class="features-list">
+                        <div class="feature-card">
+                            <div class="feature-icon-wrapper">
+                                <i class="fa-solid fa-snowflake"></i>
+                            </div>
+                            <div class="feature-details">
+                                <h3>Кондиционер</h3>
+                                <p>Климат-контроль салона</p>
+                            </div>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon-wrapper">
+                                <i class="fa-solid fa-users"></i>
+                            </div>
+                            <div class="feature-details">
+                                <h3>Вместимость</h3>
+                                <p>20 комфортных мест</p>
+                            </div>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon-wrapper">
+                                <i class="fa-solid fa-couch"></i>
+                            </div>
+                            <div class="feature-details">
+                                <h3>Комфорт</h3>
+                                <p>Регулируемые сиденья</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="hero-actions">
+                        <a href="#booking-section" class="btn-primary">Забронировать поездку</a>
+                        <a href="tel:87026448344" class="btn-secondary">
+                            <i class="fa-solid fa-phone"></i> Позвонить
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Hero Image Showcase -->
+                <div class="hero-image-wrapper">
+                    <div class="image-border-gradient">
+                        <img src="{% static 'bookings/images/sprinter.jpg' %}" alt="Mercedes Sprinter 20 мест" class="hero-img">
+                    </div>
+                    <div class="image-overlay-card">
+                        <div class="overlay-badge"><i class="fa-solid fa-circle-check"></i> Доступен</div>
+                        <h4>Mercedes-Benz Sprinter</h4>
+                        <p class="license-plate"><i class="fa-solid fa-id-card"></i> 989 ABY 17</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Booking and Map Section -->
+        <section id="booking-section" class="booking-section">
+            <div class="section-header">
+                <span class="sub-title">Онлайн Заказ</span>
+                <h2 class="section-title">Куда вы хотите поехать?</h2>
+                <p class="section-desc">Укажите свое имя, номер телефона, выберите дату и кликните по карте мира, чтобы указать точку назначения.</p>
+            </div>
+
+            <div class="booking-grid">
+                <!-- Map Container -->
+                <div class="map-card">
+                    <div class="map-header">
+                        <div class="map-title-wrapper">
+                            <i class="fa-solid fa-map-location-dot map-icon"></i>
+                            <div>
+                                <h4>Интерактивная Карта Мира</h4>
+                                <p>Нажмите на любое место на карте для выбора точки</p>
+                            </div>
+                        </div>
+                        <div id="map-selection-indicator" class="map-status-indicator">
+                            <span class="status-dot"></span> Точка не выбрана
+                        </div>
+                    </div>
+                    <div class="map-wrapper">
+                        <div id="map"></div>
+                    </div>
+                </div>
+
+                <!-- Form Container -->
+                <div class="form-card">
+                    <form id="booking-form" class="booking-form">
+                        <div class="form-group">
+                            <label for="client-name">Ваше имя</label>
+                            <div class="input-wrapper">
+                                <i class="fa-solid fa-user input-icon"></i>
+                                <input type="text" id="client-name" name="name" required placeholder="Введите ваше имя">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="client-phone">Номер телефона</label>
+                            <div class="input-wrapper">
+                                <i class="fa-solid fa-phone input-icon"></i>
+                                <input type="tel" id="client-phone" name="phone" required placeholder="87026448344" value="87026448344">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="booking-date">Дата поездки</label>
+                            <div class="input-wrapper">
+                                <i class="fa-solid fa-calendar-days input-icon"></i>
+                                <input type="date" id="booking-date" name="booking_date" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="destination-address">Пункт назначения</label>
+                            <div class="input-wrapper">
+                                <i class="fa-solid fa-location-dot input-icon"></i>
+                                <input type="text" id="destination-address" name="destination_name" readonly placeholder="Выберите на карте..." required>
+                            </div>
+                            <small class="form-help-text">Местоположение автоматически заполнится при клике на карту.</small>
+                        </div>
+
+                        <!-- Hidden inputs for coordinates -->
+                        <input type="hidden" id="dest-lat" name="destination_lat">
+                        <input type="hidden" id="dest-lng" name="destination_lng">
+
+                        <button type="submit" id="submit-btn" class="btn-submit" disabled>
+                            <span class="btn-text">Отправить заказ</span>
+                            <span class="btn-loader hidden"><i class="fa-solid fa-circle-notch fa-spin"></i> Отправка...</span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Booking Success Modal -->
+    <div id="success-modal" class="modal hidden">
+        <div class="modal-overlay"></div>
+        <div class="modal-content">
+            <div class="success-icon-container">
+                <i class="fa-solid fa-circle-check scale-up"></i>
+            </div>
+            <h2>Заказ успешно оформлен!</h2>
+            <p id="success-message">Мы свяжемся с вами в ближайшее время по указанному номеру телефона.</p>
+            <button class="btn-modal-close" onclick="closeModal()">Отлично</button>
+        </div>
+    </div>
+
+    <!-- Booking Error Toast -->
+    <div id="error-toast" class="toast hidden">
+        <div class="toast-content">
+            <i class="fa-solid fa-circle-exclamation toast-icon"></i>
+            <span id="toast-message">Произошла ошибка при отправке.</span>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-container">
+            <p>&copy; 2026 SprinterRent. Все права защищены. Mercedes-Benz Sprinter 989 ABY 17</p>
+            <p class="footer-contacts">Телефон для связи: <a href="tel:87026448344">87026448344</a></p>
+        </div>
+    </footer>
+
+    <!-- Leaflet.js JavaScript -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    
+    <!-- Custom App JS -->
+    <script src="{% static 'bookings/js/app.js' %}"></script>
+</body>
+</html>
