@@ -1,0 +1,14 @@
+{
+  "builds": [
+    {
+      "src": "sprinter_booking/wsgi.py",
+      "use": "@vercel/python"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "sprinter_booking/wsgi.py"
+    }
+  ]
+}
