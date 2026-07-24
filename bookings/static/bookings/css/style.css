@@ -820,12 +820,17 @@ body {
         width: 100%;
     }
     
+    .hero-image-wrapper {
+        margin-bottom: 2rem;
+    }
+
     .hero-img {
-        height: 400px;
+        height: 480px;
+        object-position: center bottom;
     }
     
     .image-overlay-card {
-        bottom: 1rem;
+        bottom: -2rem;
         left: 2rem;
         right: 2rem;
         padding: 0.8rem;
