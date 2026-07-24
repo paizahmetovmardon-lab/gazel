@@ -830,7 +830,7 @@ body {
     }
     
     .image-overlay-card {
-        bottom: -2rem;
+        bottom: 0.5rem;
         left: 2rem;
         right: 2rem;
         padding: 0.8rem;
