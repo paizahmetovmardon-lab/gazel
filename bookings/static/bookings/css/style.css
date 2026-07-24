@@ -776,7 +776,7 @@ body {
     }
     
     .hero-img {
-        height: 400px;
+        height: 500px;
     }
     
     .booking-grid {
@@ -821,14 +821,27 @@ body {
     }
     
     .hero-img {
-        height: 320px;
+        height: 400px;
     }
     
     .image-overlay-card {
         bottom: 1rem;
-        left: 1rem;
-        right: 1rem;
-        padding: 1rem;
+        left: 2rem;
+        right: 2rem;
+        padding: 0.8rem;
+    }
+    
+    .image-overlay-card h4 {
+        font-size: 0.95rem;
+    }
+    
+    .overlay-badge {
+        font-size: 0.65rem;
+        padding: 0.15rem 0.4rem;
+    }
+    
+    .license-plate {
+        font-size: 0.8rem;
     }
     
     .booking-grid {
