@@ -200,11 +200,10 @@ body {
 /* Features List */
 .features-list {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     gap: 0.8rem;
     width: 100%;
     margin-bottom: 2.5rem;
-    flex-wrap: wrap;
 }
 
 .feature-card {
