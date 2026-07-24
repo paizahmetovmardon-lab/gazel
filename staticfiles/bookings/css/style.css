@@ -16,6 +16,19 @@
     --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* Light Theme Variables */
+body.light-theme {
+    --bg-dark: #f1f5f9;
+    --bg-surface: #ffffff;
+    --bg-card: rgba(255, 255, 255, 0.85);
+    --bg-card-hover: rgba(248, 250, 252, 0.95);
+    --text-primary: #0f172a;
+    --text-secondary: #475569;
+    --border: rgba(0, 0, 0, 0.1);
+    --border-hover: rgba(56, 189, 248, 0.5);
+    --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.05);
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -36,6 +49,7 @@ body {
         radial-gradient(circle at 10% 20%, rgba(2, 132, 199, 0.15) 0%, transparent 40%),
         radial-gradient(circle at 90% 80%, rgba(56, 189, 248, 0.1) 0%, transparent 45%);
     background-attachment: fixed;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 /* Scrollbar styling */
@@ -143,6 +157,25 @@ body {
     box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
 }
 
+.theme-toggle-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-primary);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    transition: var(--transition);
+}
+
+.theme-toggle-btn:hover {
+    background: rgba(128, 128, 128, 0.1);
+}
+
 /* Main content */
 .main-content {
     max-width: 1200px;
@@ -200,11 +233,10 @@ body {
 /* Features List */
 .features-list {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     gap: 0.8rem;
     width: 100%;
     margin-bottom: 2.5rem;
-    flex-wrap: wrap;
 }
 
 .feature-card {
@@ -318,7 +350,7 @@ body {
 
 .hero-img {
     width: 100%;
-    height: 580px;
+    height: 650px;
     object-fit: cover;
     border-radius: 18px;
     display: block;
@@ -326,15 +358,15 @@ body {
 
 .image-overlay-card {
     position: absolute;
-    bottom: 2rem;
-    left: 2rem;
-    right: 2rem;
+    bottom: 1.5rem;
+    left: 3rem;
+    right: 3rem;
     background: rgba(15, 23, 42, 0.8);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
     border: 1px solid var(--border);
-    padding: 1.5rem;
-    border-radius: 16px;
+    padding: 1rem;
+    border-radius: 12px;
     box-shadow: var(--glass-shadow);
     animation: float 4s ease-in-out infinite;
 }
@@ -350,22 +382,22 @@ body {
     gap: 0.3rem;
     background: rgba(16, 185, 129, 0.15);
     color: var(--success);
-    padding: 0.2rem 0.6rem;
+    padding: 0.2rem 0.5rem;
     border-radius: 50px;
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     font-weight: 700;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.3rem;
     border: 1px solid rgba(16, 185, 129, 0.2);
 }
 
 .image-overlay-card h4 {
-    font-size: 1.2rem;
+    font-size: 1.05rem;
     font-weight: 700;
-    margin-bottom: 0.2rem;
+    margin-bottom: 0.1rem;
 }
 
 .license-plate {
-    font-size: 0.95rem;
+    font-size: 0.85rem;
     color: var(--accent);
     font-weight: 600;
     display: flex;
@@ -777,7 +809,7 @@ body {
     }
     
     .hero-img {
-        height: 400px;
+        height: 500px;
     }
     
     .booking-grid {
@@ -821,15 +853,33 @@ body {
         width: 100%;
     }
     
+    .hero-image-wrapper {
+        margin-bottom: 2rem;
+    }
+
     .hero-img {
-        height: 320px;
+        height: 480px;
+        object-position: center bottom;
     }
     
     .image-overlay-card {
-        bottom: 1rem;
-        left: 1rem;
-        right: 1rem;
-        padding: 1rem;
+        bottom: 0.5rem;
+        left: 2rem;
+        right: 2rem;
+        padding: 0.8rem;
+    }
+    
+    .image-overlay-card h4 {
+        font-size: 0.95rem;
+    }
+    
+    .overlay-badge {
+        font-size: 0.65rem;
+        padding: 0.15rem 0.4rem;
+    }
+    
+    .license-plate {
+        font-size: 0.8rem;
     }
     
     .booking-grid {

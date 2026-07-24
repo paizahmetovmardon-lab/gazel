@@ -1,4 +1,26 @@
 document.addEventListener('DOMContentLoaded', function() {
+    // 0. Theme Toggle Logic
+    const themeToggleBtn = document.getElementById('theme-toggle');
+    const themeIcon = document.getElementById('theme-icon');
+    const currentTheme = localStorage.getItem('theme');
+    
+    if (currentTheme === 'light') {
+        document.body.classList.add('light-theme');
+        themeIcon.classList.replace('fa-sun', 'fa-moon');
+    }
+    
+    themeToggleBtn.addEventListener('click', () => {
+        document.body.classList.toggle('light-theme');
+        let theme = 'dark';
+        if (document.body.classList.contains('light-theme')) {
+            theme = 'light';
+            themeIcon.classList.replace('fa-sun', 'fa-moon');
+        } else {
+            themeIcon.classList.replace('fa-moon', 'fa-sun');
+        }
+        localStorage.setItem('theme', theme);
+    });
+
     // 1. Initialize Map
     // Center around Central Asia/Kazakhstan/Uzbekistan to focus on primary service region, zoom level 3
     const defaultCenter = [43.25, 69.05]; 
@@ -169,7 +191,11 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(response => response.json().then(data => ({ status: response.status, body: data })))
         .then(res => {
             if (res.status === 200 && res.body.status === 'success') {
-                // Success!
+                // Success! Create WhatsApp message and redirect
+                const textMsg = `*Yangi buyurtma!* 🚗\n\n*Ism:* ${payload.name}\n*Telefon:* ${payload.phone}\n*Sana:* ${payload.booking_date}\n*Manzil:* ${payload.destination_name}`;
+                const waUrl = `https://api.whatsapp.com/send?phone=77026448344&text=${encodeURIComponent(textMsg)}`;
+                window.open(waUrl, '_blank');
+
                 showModal(res.body.message);
                 
                 // Reset form values, keeping the default contact number
