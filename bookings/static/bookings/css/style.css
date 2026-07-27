@@ -894,12 +894,21 @@ body {
     
     .nav-container {
         flex-direction: column;
-        gap: 1rem;
+        gap: 0.8rem;
     }
     
     .contact-nav {
         width: 100%;
-        justify-content: space-between;
+        display: flex !important;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+    
+    .phone-link {
+        font-size: 1.1rem;
+        display: flex !important;
+        align-items: center;
     }
     
     .main-content {
