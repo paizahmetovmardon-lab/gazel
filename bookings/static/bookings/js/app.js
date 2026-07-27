@@ -21,24 +21,127 @@ document.addEventListener('DOMContentLoaded', function() {
         localStorage.setItem('theme', theme);
     });
 
+    // 0b. Salon Image Toggle — click or hover on right zone shows interior photo
+    const carImageBox = document.getElementById('car-image-box');
+    const hoverZone = document.getElementById('hover-zone');
+    const mainCarImg = document.getElementById('main-car-img');
+    const salonImg = document.getElementById('salon-img');
+    const salonHint = document.getElementById('salon-hint');
+
+    if (carImageBox && hoverZone && salonImg) {
+        // Mobile / desktop: click anywhere on image toggles salon view
+        let salonVisible = false;
+
+        function showSalon() {
+            carImageBox.classList.add('show-salon');
+            salonVisible = true;
+            if (salonHint) salonHint.style.opacity = '0';
+        }
+
+        function hideSalon() {
+            carImageBox.classList.remove('show-salon');
+            salonVisible = false;
+            if (salonHint) salonHint.style.opacity = '1';
+        }
+
+        // Hover: right zone shows salon, leaving hides it (desktop)
+        hoverZone.addEventListener('mouseenter', () => {
+            if (!salonVisible) showSalon();
+        });
+
+        hoverZone.addEventListener('mouseleave', () => {
+            if (salonVisible) hideSalon();
+        });
+
+        // Click on main image or salon image toggles
+        mainCarImg.addEventListener('click', () => {
+            salonVisible ? hideSalon() : showSalon();
+        });
+
+        salonImg.addEventListener('click', () => {
+            hideSalon();
+        });
+    }
+
     // 1. Initialize Map
     // Center around Central Asia/Kazakhstan/Uzbekistan to focus on primary service region, zoom level 3
-    const defaultCenter = [43.25, 69.05]; 
-    const defaultZoom = 3;
+    // Central Asia bounds: KZ + UZ + KG (with small padding)
+    const centralAsiaBounds = L.latLngBounds(
+        L.latLng(36.5, 46.5),   // SW corner (south Uzbekistan / west Kazakhstan)
+        L.latLng(56.0, 88.0)    // NE corner (north Kazakhstan / east Kyrgyzstan)
+    );
+
+    const defaultCenter = [43.0, 65.0]; // Center of KZ+UZ+KG
+    const defaultZoom = 5;
 
     const map = L.map('map', {
         center: defaultCenter,
         zoom: defaultZoom,
-        minZoom: 2,
-        maxZoom: 18
+        minZoom: 5,
+        maxZoom: 18,
+        maxBounds: centralAsiaBounds,
+        maxBoundsViscosity: 1.0   // Hard boundary — can't pan outside
     });
 
-    // Dark styled map tiles (CartoDB Dark Matter) matching the premium dark theme
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+    // Bright CartoDB Voyager tiles — shows real country names, roads, colorful style
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
         subdomains: 'abcd',
         maxZoom: 20
     }).addTo(map);
+
+    // --- Country Mask: hide everything outside KZ, UZ, KG ---
+    // Fetches real country boundaries and overlays a mask polygon
+    async function addCountryMask() {
+        const BASE = 'https://raw.githubusercontent.com/johan/world.geo.json/master/countries/';
+        try {
+            const [kazData, uzbData, kgzData] = await Promise.all([
+                fetch(BASE + 'KAZ.geo.json').then(r => r.json()),
+                fetch(BASE + 'UZB.geo.json').then(r => r.json()),
+                fetch(BASE + 'KGZ.geo.json').then(r => r.json())
+            ]);
+
+            // Giant world bounding rectangle as the outer ring of our mask polygon
+            const worldRing = [
+                [-90, -180], [-90, 180], [90, 180], [90, -180], [-90, -180]
+            ].map(([lat, lng]) => [lat, lng]);
+
+            // Extract polygon rings from a GeoJSON feature and convert [lng,lat] → [lat,lng]
+            function getRings(data) {
+                const rings = [];
+                const geom = data.features[0].geometry;
+                if (geom.type === 'Polygon') {
+                    rings.push(geom.coordinates[0].map(([lng, lat]) => [lat, lng]));
+                } else if (geom.type === 'MultiPolygon') {
+                    geom.coordinates.forEach(poly => {
+                        rings.push(poly[0].map(([lng, lat]) => [lat, lng]));
+                    });
+                }
+                return rings;
+            }
+
+            // Combine holes: all 3 country outlines become transparent holes
+            const holes = [
+                ...getRings(kazData),
+                ...getRings(uzbData),
+                ...getRings(kgzData)
+            ];
+
+            // Leaflet polygon: [outerRing, ...holes]
+            L.polygon([worldRing, ...holes], {
+                color: 'none',
+                fillColor: '#0d1526',   // Same as page background
+                fillOpacity: 0.88,
+                interactive: false,     // Clicks pass through the mask
+                pane: 'tilePane'        // Below markers but above tiles
+            }).addTo(map);
+
+        } catch (err) {
+            console.warn('Country mask could not be loaded:', err);
+        }
+    }
+    addCountryMask();
+    // --- End Country Mask ---
 
     let marker = null;
 
@@ -191,8 +294,20 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(response => response.json().then(data => ({ status: response.status, body: data })))
         .then(res => {
             if (res.status === 200 && res.body.status === 'success') {
-                // Success! Create WhatsApp message and redirect
-                const textMsg = `*Yangi buyurtma!* 🚗\n\n*Ism:* ${payload.name}\n*Telefon:* ${payload.phone}\n*Sana:* ${payload.booking_date}\n*Manzil:* ${payload.destination_name}`;
+                // Build Google Maps link with coordinates
+                const lat = payload.destination_lat;
+                const lng = payload.destination_lng;
+                const mapsLink = `https://www.google.com/maps?q=${lat},${lng}`;
+
+                // WhatsApp message with location link
+                const textMsg =
+                    `🚐 *Yangi buyurtma!*\n\n` +
+                    `👤 *Ism:* ${payload.name}\n` +
+                    `📞 *Telefon:* ${payload.phone}\n` +
+                    `📅 *Sana:* ${payload.booking_date}\n` +
+                    `📍 *Manzil:* ${payload.destination_name}\n` +
+                    `🗺 *Joylashuv:* ${mapsLink}`;
+
                 const waUrl = `https://api.whatsapp.com/send?phone=77026448344&text=${encodeURIComponent(textMsg)}`;
                 window.open(waUrl, '_blank');
 

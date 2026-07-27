@@ -105,9 +105,14 @@
 
                 <!-- Hero Image Showcase -->
                 <div class="hero-image-wrapper">
-                    <div class="image-border-gradient">
+                    <div class="image-border-gradient" id="car-image-box" style="position: relative;">
                         <img src="{% static 'bookings/images/sprinter.jpg' %}" alt="Mercedes Sprinter 20 мест"
-                            class="hero-img">
+                            class="hero-img" id="main-car-img">
+                        <img src="{% static 'bookings/images/salon.jpg' %}" alt="Салон Sprinter" class="salon-img" id="salon-img">
+                        <div class="hover-right-zone" id="hover-zone"></div>
+                        <div class="salon-hint" id="salon-hint">
+                            <i class="fa-solid fa-couch"></i> Салонни кўриш
+                        </div>
                     </div>
                     <div class="image-overlay-card">
                         <div class="overlay-badge"><i class="fa-solid fa-circle-check"></i> Доступен</div>
