@@ -391,7 +391,7 @@ body {
     right: 0;
     width: 50%;
     height: 100%;
-    z-index: 2;
+    z-index: 1;
     cursor: pointer;
 }
 

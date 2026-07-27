@@ -44,6 +44,11 @@ document.addEventListener('DOMContentLoaded', function() {
             if (salonHint) salonHint.style.opacity = '1';
         }
 
+        // Click anywhere on the box toggles
+        carImageBox.addEventListener('click', () => {
+            salonVisible ? hideSalon() : showSalon();
+        });
+
         // Hover: right zone shows salon, leaving hides it (desktop)
         hoverZone.addEventListener('mouseenter', () => {
             if (!salonVisible) showSalon();
@@ -51,15 +56,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
         hoverZone.addEventListener('mouseleave', () => {
             if (salonVisible) hideSalon();
-        });
-
-        // Click on main image or salon image toggles
-        mainCarImg.addEventListener('click', () => {
-            salonVisible ? hideSalon() : showSalon();
-        });
-
-        salonImg.addEventListener('click', () => {
-            hideSalon();
         });
     }
 
