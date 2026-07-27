@@ -909,6 +909,7 @@ body {
         font-size: 1.1rem;
         display: flex !important;
         align-items: center;
+        color: #ffffff !important; /* Force white color so it stands out */
     }
     
     .main-content {
